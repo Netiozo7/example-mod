@@ -7,5 +7,15 @@
     "id": "netioz04.brightness",
     "name": "Brightness Changer",
     "developer": "Netioz04",
-    "description": "Change brightness of the game."
+    "description": "Change brightness of the game.",
+    "settings": {
+        "screen-darkness": {
+            "name": "Obscurité de l'écran",
+            "description": "Ajuste le niveau de noir par-dessus le jeu.",
+            "type": "float",
+            "default": 0.5,
+            "min": 0.0,
+            "max": 1.0
+        }
+    }
 }
