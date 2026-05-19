@@ -1,17 +1,15 @@
 {
-    "geode": "*",
-    "gd": {
-        "win": "2.2081",
-        "android": "2.2081",
-        "mac": "2.2081",
-        "ios": "2.2081"
-    },
-    "id": "netioz04.brightness",
-    "name": "Brightness",
+    "geode": "3.0.0-beta.1",
     "version": "v1.0.0",
+    "id": "netioz04.brightness",
+    "name": "Brightness Changer",
     "developer": "Netioz04",
-    "description": "With this mod, you can change the game brightness.",
-    "dependencies": {
-        "geode.node-ids": ">=v1.23.3"
-    }
+    "description": "Change brightness of the game.",
+    "dependencies": [
+        {
+            "id": "geode-sdk.geode",
+            "version": ">=3.0.0-beta.1",
+            "importance": "required"
+        }
+    ]
 }
