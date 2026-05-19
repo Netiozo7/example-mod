@@ -1,5 +1,5 @@
 {
-    "geode": "3.0.0-beta.1",
+    "geode": "*",
     "gd": {
         "win": "2.2081"
     },
@@ -11,7 +11,7 @@
     "dependencies": [
         {
             "id": "geode-sdk.geode",
-            "version": ">=3.0.0-beta.1",
+            "version": "*",
             "importance": "required"
         }
     ]
