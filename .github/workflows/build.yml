@@ -8,18 +8,14 @@ on:
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-          - name: Windows
-            os: windows-latest
-
-    name: ${{ matrix:config.name }}
-    runs-on: ${{ matrix:config.os }}
+    name: Build Windows Mod
+    runs-on: windows-2022
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
 
       - name: Build Mod
         uses: geode-sdk/build-mod-action@main
