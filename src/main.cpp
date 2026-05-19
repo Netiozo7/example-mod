@@ -4,8 +4,10 @@
 using namespace geode::prelude;
 
 class $modify(MyMenuLayer, MenuLayer) {
-    // On crée une variable pour garder une trace de notre calque noir
-    CCLayerColor* m_brightnessOverlay = nullptr;
+    // On déclare la structure Fields pour que Geode puisse y lier notre calque
+    struct Fields {
+        CCLayerColor* m_brightnessOverlay = nullptr;
+    };
 
     bool init() {
         if (!MenuLayer::init()) {
@@ -16,15 +18,14 @@ class $modify(MyMenuLayer, MenuLayer) {
         double darknessValue = Mod::get()->getSettingValue<double>("screen-darkness");
         GLubyte opacity = static_cast<GLubyte>(darknessValue * 255.0);
 
-        // 2. On crée le calque et on le stocke dans notre variable m_fields
+        // 2. On crée le calque et on l'enregistre proprement dans m_fields
         m_fields->m_brightnessOverlay = CCLayerColor::create(ccc4(0, 0, 0, opacity));
         m_fields->m_brightnessOverlay->setZOrder(-1);
         this->addChild(m_fields->m_brightnessOverlay);
 
-        // 3. LA MAGIE : On écoute les changements de la barre en direct !
+        // 3. On écoute les changements en direct
         this->listenForSettingChanges("screen-darkness", [this](double newValue) {
             if (m_fields->m_brightnessOverlay) {
-                // Dès que la barre bouge, on recalcule et on applique l'opacité direct !
                 GLubyte newOpacity = static_cast<GLubyte>(newValue * 255.0);
                 m_fields->m_brightnessOverlay->setOpacity(newOpacity);
             }
