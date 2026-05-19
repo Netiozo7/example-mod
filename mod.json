@@ -1,5 +1,6 @@
 {
     "geode": "3.0.0-beta.1",
+    "gd": "2.2081",
     "version": "v1.0.0",
     "id": "netioz04.brightness",
     "name": "Brightness Changer",
