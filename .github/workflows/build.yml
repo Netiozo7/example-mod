@@ -14,15 +14,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Mod
-        uses: geode-sdk/build-geode-mod@main
-        id: build
+        uses: geode-sdk/build-geode-mod@v2
         with:
-          sdk: latest
-          # On dit explicitement à Geode de compiler le dossier courant
-          target: Win64
+          sdk: v2.0.0
+          combine: true
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Windows Build
-          path: ${{ steps.build.outputs.build-output }}
+          path: |
+            build/*.geode
