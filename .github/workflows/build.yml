@@ -10,17 +10,16 @@ jobs:
   build-windows:
     runs-on: windows-latest
     steps:
-      # Étape indispensable pour cloner TON dépôt sur la machine virtuelle
       - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          path: '.'
 
       - name: Build Mod
         uses: geode-sdk/build-geode-mod@main
         id: build
         with:
           sdk: latest
+          # On dit explicitement à Geode de compiler le dossier courant
+          target: Win64
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
