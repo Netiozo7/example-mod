@@ -7,6 +7,5 @@
     "id": "netioz04.brightness",
     "name": "Brightness Changer",
     "developer": "Netioz04",
-    "description": "Change brightness of the game.",
-    "dependencies": []
+    "description": "Change brightness of the game."
 }
