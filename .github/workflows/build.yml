@@ -7,21 +7,22 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-windows:
-    runs-on: windows-latest
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - name: Windows
+            os: windows-latest
+
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+
     steps:
-      - name: Checkout Repository
+      - name: Checkout CLI
         uses: actions/checkout@v4
 
       - name: Build Mod
-        uses: geode-sdk/build-geode-mod@v2
+        uses: geode-sdk/build-geode-mod@main
         with:
-          sdk: v2.0.0
           combine: true
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Windows Build
-          path: |
-            build/*.geode
