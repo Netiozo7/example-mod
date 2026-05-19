@@ -1,30 +1,29 @@
 #include <Geode/Geode.hpp>
-#include <Geode/modify/MenuLayer.hpp>
+#include <Geode/modify/CCScene.hpp>
 
 using namespace geode::prelude;
 
-class $modify(MyMenuLayer, MenuLayer) {
+// On intercepte la classe de base de toutes les scènes du jeu
+class $modify(MyCCScene, CCScene) {
     bool init() {
-        if (!MenuLayer::init()) {
+        if (!CCScene::init()) {
             return false;
         }
 
-        // 1. On récupère la valeur de ta barre (par défaut 0.5)
+        // 1. On récupère la configuration de ta barre
         double darknessValue = Mod::get()->getSettingValue<double>("screen-darkness");
-
-        // 2. On convertit en opacité (0 à 255)
         GLubyte opacity = static_cast<GLubyte>(darknessValue * 255.0);
 
-        // 3. On crée le calque noir géant
+        // 2. On crée le calque noir géant
         auto brightnessOverlay = CCLayerColor::create(ccc4(0, 0, 0, opacity));
         
-        // 4. ON LE MET TOUT DEVANT (ZOrder très haut)
-        brightnessOverlay->setZOrder(100);
+        // 3. On le met tout devant (ZOrder immense)
+        brightnessOverlay->setZOrder(99999);
         
-        // 5. On désactive les clics dessus pour pouvoir cliquer à travers sur les boutons du menu
+        // 4. On désactive les clics pour pouvoir jouer normalement à travers
         brightnessOverlay->setTouchEnabled(false);
         
-        // 6. On l'ajoute au menu
+        // 5. On l'ajoute directement à la scène globale
         this->addChild(brightnessOverlay);
 
         return true;
