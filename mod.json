@@ -8,11 +8,5 @@
     "name": "Brightness Changer",
     "developer": "Netioz04",
     "description": "Change brightness of the game.",
-    "dependencies": [
-        {
-            "id": "geode-sdk.geode",
-            "version": ">=5.7.1",
-            "importance": "required"
-        }
-    ]
+    "dependencies": []
 }
