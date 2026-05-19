@@ -9,17 +9,21 @@ class $modify(MyMenuLayer, MenuLayer) {
             return false;
         }
 
-        ccColor3B darkColor = {128, 128, 128};
+        // 1. On récupère la valeur de la barre (entre 0.0 et 1.0, défaut 0.5)
+        double darknessValue = Mod::get()->getSettingValue<double>("screen-darkness");
 
-        if (auto rgbaNode = dynamic_cast<CCRGBAProtocol*>(this)) {
-            rgbaNode->setColor(darkColor);
-        }
+        // 2. On convertit ça en opacité pour Cocos2d (entre 0 et 255)
+        // Si le slider est au milieu (0.5), l'opacité sera d'environ 127
+        GLubyte opacity = static_cast<GLubyte>(darknessValue * 255.0);
 
-        for (auto child : CCArrayExt<CCNode*>(this->getChildren())) {
-            if (auto rgbaChild = dynamic_cast<CCRGBAProtocol*>(child)) {
-                rgbaChild->setColor(darkColor);
-            }
-        }
+        // 3. On crée le calque avec l'opacité choisie
+        auto brightnessOverlay = CCLayerColor::create(ccc4(0, 0, 0, opacity));
+        
+        // 4. On le place sous les boutons pour ne pas bloquer les clics
+        brightnessOverlay->setZOrder(-1);
+        
+        // 5. On l'ajoute à l'écran
+        this->addChild(brightnessOverlay);
 
         return true;
     }
