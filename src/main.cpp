@@ -10,18 +10,20 @@ class $modify(MyMenuLayer, MenuLayer) {
         }
 
         // 128 partout = luminosité baissée de moitié (mode sombre)
-        GLubyte r = 128; 
-        GLubyte g = 128;
-        GLubyte b = 128;
+        ccColor3B darkColor = {128, 128, 128};
 
-        this->setColor({r, g, b});
+        // On applique la couleur au fond si possible
+        if (auto rgbaNode = dynamic_cast<CCRGBAProtocol*>(this)) {
+            rgbaNode->setColor(darkColor);
+        }
 
+        // On parcourt tous les éléments de l'écran en toute sécurité
         for (auto child : CCArrayExt<CCNode*>(this->getChildren())) {
-            child->setColor({r, g, b});
+            if (auto rgbaChild = dynamic_cast<CCRGBAProtocol*>(child)) {
+                rgbaChild->setColor(darkColor);
+            }
         }
 
         return true;
     }
 };
-
-
