@@ -9,10 +9,27 @@ on:
 jobs:
   build:
     name: Build Windows Mod
-    runs-on: windows-latest
+    runs-on: windows-2022
 
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Setup CMake
+        uses: jwlawson/actions-setup-cmake@v2
+
+      - name: Setup Ninja
+        uses: ashutoshvarma/setup-ninja@v1.1.5
+
+      - name: Install Geode CLI
+        run: |
+          idownload https://github.com/geode-sdk/cli/releases/latest/download/geode-cli-win.zip -OutFile geode.zip
+          Expand-Archive geode.zip -DestinationPath C:\geode
+          echo "C:\geode" >> $GITHUB_PATH
+
       - name: Build Mod
-        uses: geode-sdk/actions/build@main
+        run: |
+          cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --config Release
