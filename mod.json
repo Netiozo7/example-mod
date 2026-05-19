@@ -1,18 +1,10 @@
 {
-    "geode": "*",
-    "gd": {
-        "win": "2.2081"
-    },
+    "geode": "2.0.0",
+    "gd": "2.2081",
     "version": "v1.0.0",
     "id": "netioz04.brightness",
     "name": "Brightness Changer",
     "developer": "Netioz04",
     "description": "Change brightness of the game.",
-    "dependencies": [
-        {
-            "id": "geode-sdk.geode",
-            "version": "*",
-            "importance": "required"
-        }
-    ]
+    "dependencies": []
 }
