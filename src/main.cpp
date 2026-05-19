@@ -4,32 +4,25 @@
 using namespace geode::prelude;
 
 class $modify(MyMenuLayer, MenuLayer) {
-    // On déclare la structure Fields pour que Geode puisse y lier notre calque
-    struct Fields {
-        CCLayerColor* m_brightnessOverlay = nullptr;
-    };
-
     bool init() {
         if (!MenuLayer::init()) {
             return false;
         }
 
-        // 1. On récupère la valeur actuelle de la barre
+        // 1. On récupère la valeur de la barre (entre 0.0 et 1.0, défaut 0.5)
         double darknessValue = Mod::get()->getSettingValue<double>("screen-darkness");
+
+        // 2. On convertit ça en opacité pour Cocos2d (entre 0 et 255)
         GLubyte opacity = static_cast<GLubyte>(darknessValue * 255.0);
 
-        // 2. On crée le calque et on l'enregistre proprement dans m_fields
-        m_fields->m_brightnessOverlay = CCLayerColor::create(ccc4(0, 0, 0, opacity));
-        m_fields->m_brightnessOverlay->setZOrder(-1);
-        this->addChild(m_fields->m_brightnessOverlay);
-
-        // 3. On écoute les changements en direct
-        this->listenForSettingChanges("screen-darkness", [this](double newValue) {
-            if (m_fields->m_brightnessOverlay) {
-                GLubyte newOpacity = static_cast<GLubyte>(newValue * 255.0);
-                m_fields->m_brightnessOverlay->setOpacity(newOpacity);
-            }
-        });
+        // 3. On crée le calque avec l'opacité choisie
+        auto brightnessOverlay = CCLayerColor::create(ccc4(0, 0, 0, opacity));
+        
+        // 4. On le place sous les boutons pour ne pas bloquer les clics
+        brightnessOverlay->setZOrder(-1);
+        
+        // 5. On l'ajoute à l'écran
+        this->addChild(brightnessOverlay);
 
         return true;
     }
