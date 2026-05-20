@@ -1,31 +1,28 @@
 #include <Geode/Geode.hpp>
-#include <Geode/modify/CCScene.hpp>
 
 using namespace geode::prelude;
 
-// On intercepte la classe de base de toutes les scènes du jeu
-class $modify(MyCCScene, CCScene) {
-    bool init() {
-        if (!CCScene::init()) {
-            return false;
-        }
+// On s'enregistre au démarrage du mod (zéro modification de scènes !)
+$execute {
+    // 1. On récupère la valeur de ta barre
+    double darknessValue = Mod::get()->getSettingValue<double>("screen-darkness");
+    GLubyte opacity = static_cast<GLubyte>(darknessValue * 255.0);
 
-        // 1. On récupère la configuration de ta barre
-        double darknessValue = Mod::get()->getSettingValue<double>("screen-darkness");
-        GLubyte opacity = static_cast<GLubyte>(darknessValue * 255.0);
+    // 2. On crée notre calque noir géant
+    auto brightnessOverlay = CCLayerColor::create(ccc4(0, 0, 0, opacity));
+    brightnessOverlay->setZOrder(99999);
+    brightnessOverlay->setTouchEnabled(false);
+    
+    // On lui donne un identifiant pour le retrouver si besoin
+    brightnessOverlay->setID("global-brightness-overlay");
 
-        // 2. On crée le calque noir géant
-        auto brightnessOverlay = CCLayerColor::create(ccc4(0, 0, 0, opacity));
-        
-        // 3. On le met tout devant (ZOrder immense)
-        brightnessOverlay->setZOrder(99999);
-        
-        // 4. On désactive les clics pour pouvoir jouer normalement à travers
-        brightnessOverlay->setTouchEnabled(false);
-        
-        // 5. On l'ajoute directement à la scène globale
-        this->addChild(brightnessOverlay);
-
-        return true;
+    // 3. LA MAGIE : On le colle sur la scène de base de tout le moteur de jeu (CCEGLView)
+    // De cette façon, il flotte au-dessus du jeu sans toucher aux scènes de GD !
+    if (auto runningScene = CCDirector::sharedDirector()->getRunningScene()) {
+        runningScene->addChild(brightnessOverlay);
     }
-};
+
+    // 4. On s'assure qu'il reste là même quand on change d'écran
+    // (Geode s'occupe de garder les nœuds persistants en vie)
+    brightnessOverlay->retain();
+}
