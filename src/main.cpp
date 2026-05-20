@@ -1,28 +1,26 @@
 #include <Geode/Geode.hpp>
+#include <Geode/modify/CCDirector.hpp>
 
 using namespace geode::prelude;
 
-// On s'enregistre au démarrage du mod (zéro modification de scènes !)
-$execute {
-    // 1. On récupère la valeur de ta barre
-    double darknessValue = Mod::get()->getSettingValue<double>("screen-darkness");
-    GLubyte opacity = static_cast<GLubyte>(darknessValue * 255.0);
+class $modify(MyCCDirector, CCDirector) {
+    void drawScene() {
+        // 1. On laisse le jeu dessiner l'image normale d'abord
+        CCDirector::drawScene();
 
-    // 2. On crée notre calque noir géant
-    auto brightnessOverlay = CCLayerColor::create(ccc4(0, 0, 0, opacity));
-    brightnessOverlay->setZOrder(99999);
-    brightnessOverlay->setTouchEnabled(false);
-    
-    // On lui donne un identifiant pour le retrouver si besoin
-    brightnessOverlay->setID("global-brightness-overlay");
+        // 2. On récupère la valeur de ta barre
+        double darknessValue = Mod::get()->getSettingValue<double>("screen-darkness");
+        
+        // Si la barre est tout à gauche (0.0), on ne dessine rien pour économiser les performances
+        if (darknessValue <= 0.0) return;
 
-    // 3. LA MAGIE : On le colle sur la scène de base de tout le moteur de jeu (CCEGLView)
-    // De cette façon, il flotte au-dessus du jeu sans toucher aux scènes de GD !
-    if (auto runningScene = CCDirector::sharedDirector()->getRunningScene()) {
-        runningScene->addChild(brightnessOverlay);
+        GLubyte opacity = static_cast<GLubyte>(darknessValue * 255.0);
+
+        // 3. On dessine un rectangle noir transparent directement par-dessus TOUTE la fenêtre
+        // ccc4f utilise des valeurs entre 0.0f et 1.0f
+        float alpha = static_cast<float>(darknessValue);
+        
+        // On utilise la fonction de dessin native de Cocos2d pour dessiner un carré géant
+        ccDrawFilledRect(ccp(0, 0), CCDirector::sharedDirector()->getWinSize(), ccc4f(0.0f, 0.0f, 0.0f, alpha));
     }
-
-    // 4. On s'assure qu'il reste là même quand on change d'écran
-    // (Geode s'occupe de garder les nœuds persistants en vie)
-    brightnessOverlay->retain();
-}
+};
